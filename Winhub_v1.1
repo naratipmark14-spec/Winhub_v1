@@ -1,13 +1,14 @@
-local UserInputService = game:GetService("GetService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "WinHub_Final"
-screenGui.Parent = player:WaitForChild("PlayerGui")
-screenGui.ResetOnSpawn = false
+-- [[ ระบบจัดการเสียง ]]
+local clickSound = Instance.new("Sound", workspace)
+clickSound.SoundId = "rbxassetid://1673280232"
+local function playClick() clickSound:Play() end
 
+-- [[ ฟังก์ชันทำให้ลากได้ (PC & Mobile) ]]
 local function makeDraggable(obj)
 	local dragging, dragInput, dragStart, startPos
 	obj.InputBegan:Connect(function(input)
@@ -33,129 +34,212 @@ local function makeDraggable(obj)
 	end)
 end
 
-local mainContainer = Instance.new("Frame", screenGui)
-mainContainer.Size = UDim2.new(0, 600, 0, 400)
-mainContainer.Position = UDim2.new(0.5, -300, 0.5, -200)
-mainContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-mainContainer.BorderSizePixel = 0
-Instance.new("UICorner", mainContainer).CornerRadius = UDim.new(0, 12)
-makeDraggable(mainContainer)
+-- [[ สร้าง UI หลัก ]]
+local ScreenGui = Instance.new("ScreenGui", player.PlayerGui)
+ScreenGui.Name = "WinHub_V5"
+ScreenGui.ResetOnSpawn = false
 
-local title = Instance.new("TextLabel", mainContainer)
-title.Text = "วิน Hub"; title.Size = UDim2.new(0, 150, 0, 35); title.Position = UDim2.new(0, 55, 0, 10)
-title.BackgroundTransparency = 1; title.TextColor3 = Color3.new(1, 1, 1); title.TextSize = 20; title.Font = Enum.Font.GothamBold; title.TextXAlignment = Enum.TextXAlignment.Left
+local MainContainer = Instance.new("Frame", ScreenGui)
+MainContainer.Size = UDim2.new(0, 550, 0, 350) -- ปรับ Frame ให้ใหญ่ขึ้นตามคำขอ
+MainContainer.Position = UDim2.new(0.5, -275, 0.5, -175)
+MainContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainContainer.BorderSizePixel = 0
+Instance.new("UICorner", MainContainer).CornerRadius = UDim.new(0, 10)
+makeDraggable(MainContainer)
 
-local closeBtn = Instance.new("TextButton", mainContainer)
-closeBtn.Text = "X"; closeBtn.Size = UDim2.new(0, 35, 0, 35); closeBtn.Position = UDim2.new(1, -45, 0, 10)
-closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); closeBtn.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
+-- Header
+local iconHL = Instance.new("ImageLabel", MainContainer)
+iconHL.Size = UDim2.new(0, 30, 0, 30)
+iconHL.Position = UDim2.new(0, 10, 0, 10)
+iconHL.Image = "rbxassetid://6228441155"
+iconHL.BackgroundTransparency = 1
 
-local minBtn = Instance.new("TextButton", mainContainer)
-minBtn.Text = "-"; minBtn.Size = UDim2.new(0, 35, 0, 35); minBtn.Position = UDim2.new(1, -85, 0, 10)
-minBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60); minBtn.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", minBtn).CornerRadius = UDim.new(0, 8)
+local titleLabel = Instance.new("TextLabel", MainContainer)
+titleLabel.Text = "วิน Hub"
+titleLabel.Size = UDim2.new(0, 100, 0, 30)
+titleLabel.Position = UDim2.new(0, 45, 0, 10)
+titleLabel.BackgroundTransparency = 1
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.TextSize = 18
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-local sidebar = Instance.new("Frame", mainContainer)
-sidebar.Size = UDim2.new(0, 120, 1, -60); sidebar.Position = UDim2.new(0, 10, 0, 55); sidebar.BackgroundTransparency = 1
-Instance.new("UIListLayout", sidebar).Padding = UDim.new(0, 10)
+-- ปุ่ม ปิด/ย่อ
+local closeGuiBtn = Instance.new("TextButton", MainContainer)
+closeGuiBtn.Text = "X"; closeGuiBtn.Size = UDim2.new(0, 30, 0, 30); closeGuiBtn.Position = UDim2.new(1, -35, 0, 5)
+closeGuiBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); closeGuiBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", closeGuiBtn)
 
-local mainTabBtn = Instance.new("TextButton", sidebar)
-mainTabBtn.Text = "Main"; mainTabBtn.Size = UDim2.new(1, 0, 0, 40); mainTabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50); mainTabBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", mainTabBtn)
+local minGuiBtn = Instance.new("TextButton", MainContainer)
+minGuiBtn.Text = "-"; minGuiBtn.Size = UDim2.new(0, 30, 0, 30); minGuiBtn.Position = UDim2.new(1, -70, 0, 5)
+minGuiBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60); minGuiBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", minGuiBtn)
 
-local settingTabBtn = Instance.new("TextButton", sidebar)
-settingTabBtn.Text = "Setting"; settingTabBtn.Size = UDim2.new(1, 0, 0, 40); settingTabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50); settingTabBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", settingTabBtn)
+-- Sidebar
+local Sidebar = Instance.new("Frame", MainContainer)
+Sidebar.Size = UDim2.new(0, 100, 1, -50); Sidebar.Position = UDim2.new(0, 10, 0, 45); Sidebar.BackgroundTransparency = 1
+local sidebarLayout = Instance.new("UIListLayout", Sidebar); sidebarLayout.Padding = UDim.new(0, 5)
 
-local mainFrame = Instance.new("ScrollingFrame", mainContainer)
-mainFrame.Size = UDim2.new(1, -150, 1, -65); mainFrame.Position = UDim2.new(0, 140, 0, 55); mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40); mainFrame.BorderSizePixel = 0; mainFrame.CanvasSize = UDim2.new(0, 0, 2, 0); Instance.new("UICorner", mainFrame)
+local mainTabBtn = Instance.new("TextButton", Sidebar)
+mainTabBtn.Text = "Main"; mainTabBtn.Size = UDim2.new(1, 0, 0, 35); mainTabBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45); mainTabBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", mainTabBtn)
 
-local settingFrame = Instance.new("ScrollingFrame", mainContainer)
-settingFrame.Size = UDim2.new(1, -150, 1, -65); settingFrame.Position = UDim2.new(0, 140, 0, 55); settingFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40); settingFrame.BorderSizePixel = 0; settingFrame.Visible = false; settingFrame.CanvasSize = UDim2.new(0, 0, 2, 0); Instance.new("UICorner", settingFrame)
+local settingTabBtn = Instance.new("TextButton", Sidebar)
+settingTabBtn.Text = "Setting"; settingTabBtn.Size = UDim2.new(1, 0, 0, 35); settingTabBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45); settingTabBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", settingTabBtn)
 
-local function createRow(f, t, y, c)
-	local l = Instance.new("TextLabel", f); l.Text = t; l.Size = UDim2.new(0, 200, 0, 40); l.Position = UDim2.new(0, 20, 0, y); l.BackgroundTransparency = 1; l.TextColor3 = Color3.new(1,1,1); l.TextXAlignment = 0
-	local b = Instance.new("TextButton", f); b.Text = "OPEN"; b.Size = UDim2.new(0, 100, 0, 30); b.Position = UDim2.new(1, -120, 0, y+5); b.BackgroundColor3 = c; b.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", b)
-	return b
+-- ScrollingFrames
+local MainFrame = Instance.new("ScrollingFrame", MainContainer)
+MainFrame.Size = UDim2.new(1, -130, 1, -60); MainFrame.Position = UDim2.new(0, 120, 0, 50); MainFrame.BackgroundTransparency = 1; MainFrame.Visible = true; MainFrame.CanvasSize = UDim2.new(0,0,2,0)
+
+local SettingFrame = Instance.new("ScrollingFrame", MainContainer)
+SettingFrame.Size = UDim2.new(1, -130, 1, -60); SettingFrame.Position = UDim2.new(0, 120, 0, 50); SettingFrame.BackgroundTransparency = 1; SettingFrame.Visible = false; SettingFrame.CanvasSize = UDim2.new(0,0,2,0)
+
+-- [[ ปุ่มย่อ (Mini Icon) ]]
+local MiniButton = Instance.new("ImageButton", ScreenGui)
+MiniButton.Size = UDim2.new(0, 50, 0, 50); MiniButton.Position = UDim2.new(0, 20, 0, 20); MiniButton.Image = "rbxassetid://6228441155"
+MiniButton.Visible = false; MiniButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Instance.new("UICorner", MiniButton).CornerRadius = UDim.new(1, 0)
+makeDraggable(MiniButton)
+
+minGuiBtn.MouseButton1Click:Connect(function() playClick(); MainContainer.Visible = false; MiniButton.Visible = true end)
+MiniButton.MouseButton1Click:Connect(function() playClick(); MainContainer.Visible = true; MiniButton.Visible = false end)
+closeGuiBtn.MouseButton1Click:Connect(function() playClick(); ScreenGui:Destroy() end)
+
+-- Tab Switching
+mainTabBtn.MouseButton1Click:Connect(function() MainFrame.Visible = true; SettingFrame.Visible = false end)
+settingTabBtn.MouseButton1Click:Connect(function() MainFrame.Visible = false; SettingFrame.Visible = true end)
+
+-- [[ 1. ระบบ Setting (WalkSpeed & JumpPower) ]]
+local wsLabel = Instance.new("TextLabel", SettingFrame)
+wsLabel.Text = "WalkSpeed"; wsLabel.Size = UDim2.new(0, 100, 0, 30); wsLabel.Position = UDim2.new(0, 10, 0, 10); wsLabel.TextColor3 = Color3.new(1,1,1); wsLabel.BackgroundTransparency = 1
+
+local speedbox = Instance.new("TextBox", SettingFrame)
+speedbox.Name = "speedbox"; speedbox.Size = UDim2.new(0, 80, 0, 30); speedbox.Position = UDim2.new(0, 120, 0, 10); speedbox.PlaceholderText = "16"; speedbox.BackgroundColor3 = Color3.fromRGB(50,50,50); speedbox.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", speedbox)
+
+local jpLabel = Instance.new("TextLabel", SettingFrame)
+jpLabel.Text = "JumpPower"; jpLabel.Size = UDim2.new(0, 100, 0, 30); jpLabel.Position = UDim2.new(0, 10, 0, 50); jpLabel.TextColor3 = Color3.new(1,1,1); jpLabel.BackgroundTransparency = 1
+
+local jumpbox = Instance.new("TextBox", SettingFrame)
+jumpbox.Name = "jumpbox"; jumpbox.Size = UDim2.new(0, 80, 0, 30); jumpbox.Position = UDim2.new(0, 120, 0, 50); jumpbox.PlaceholderText = "50"; jumpbox.BackgroundColor3 = Color3.fromRGB(50,50,50); jumpbox.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", jumpbox)
+
+speedbox.FocusLost:Connect(function()
+	local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+	if hum and tonumber(speedbox.Text) then hum.WalkSpeed = tonumber(speedbox.Text) end
+end)
+jumpbox.FocusLost:Connect(function()
+	local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+	if hum and tonumber(jumpbox.Text) then hum.JumpPower = tonumber(jumpbox.Text); hum.UseJumpPower = true end
+end)
+
+-- [[ 2. ระบบ Main (Fly Gui & Highlight) ]]
+local function createRow(name, y, frame)
+	local label = Instance.new("TextLabel", frame)
+	label.Text = name; label.Size = UDim2.new(0, 150, 0, 30); label.Position = UDim2.new(0, 10, 0, y); label.TextColor3 = Color3.new(1,1,1); label.BackgroundTransparency = 1; label.TextXAlignment = 0
+	local btn = Instance.new("TextButton", frame)
+	btn.Text = "OPEN"; btn.Size = UDim2.new(0, 70, 0, 30); btn.Position = UDim2.new(0, 170, 0, y); btn.BackgroundColor3 = Color3.fromRGB(0, 150, 255); btn.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", btn)
+	return btn
 end
 
-local flyOpen = createRow(mainFrame, "Fly Gui By Mark", 20, Color3.fromRGB(0, 170, 127))
-local hlOpen = createRow(mainFrame, "Highlights Player", 70, Color3.fromRGB(0, 120, 255))
+local flyOpenBtn = createRow("Fly Gui By Mark", 10, MainFrame)
+local hlOpenBtn = createRow("Highlights Player", 50, MainFrame)
 
-local function createSet(t, y)
-	local l = Instance.new("TextLabel", settingFrame); l.Text = t; l.Size = UDim2.new(0, 120, 0, 40); l.Position = UDim2.new(0, 20, 0, y); l.BackgroundTransparency = 1; l.TextColor3 = Color3.new(1,1,1); l.TextXAlignment = 0
-	local b = Instance.new("TextBox", settingFrame); b.Size = UDim2.new(0, 100, 0, 30); b.Position = UDim2.new(1, -120, 0, y+5); b.BackgroundColor3 = Color3.fromRGB(60,60,60); b.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", b)
-	return b
-end
+-----------------------------------------------------------
+-- [ บริการเสริมสำหรับระบบบิน ]
+-----------------------------------------------------------
+local fly_active = false
+local fly_ui_instance = nil
 
-local wsB = createSet("WalkSpeed", 20); local jpB = createSet("JumpPower", 70)
-wsB.FocusLost:Connect(function() local h = player.Character.Humanoid; if tonumber(wsB.Text) then h.WalkSpeed = tonumber(wsB.Text) end end)
-jpB.FocusLost:Connect(function() local h = player.Character.Humanoid; if tonumber(jpB.Text) then h.UseJumpPower = true; h.JumpPower = tonumber(jpB.Text) end end)
+local function StartFlySystem()
+	if fly_ui_instance then 
+		fly_ui_instance.Enabled = not fly_ui_instance.Enabled
+		flyOpenBtn.Text = fly_ui_instance.Enabled and "CLOSE" or "OPEN"
+		return 
+	end
+	
+	flyOpenBtn.Text = "CLOSE"
+	local FlyGui = Instance.new("ScreenGui", player.PlayerGui)
+	fly_ui_instance = FlyGui
+	local FMain = Instance.new("Frame", FlyGui)
+	FMain.Size = UDim2.new(0, 200, 0, 200); FMain.Position = UDim2.new(0.8, 0, 0.5, 0); FMain.BackgroundColor3 = Color3.new(0.1,0.1,0.1); makeDraggable(FMain)
+	
+	local FTitle = Instance.new("TextLabel", FMain); FTitle.Text = "Fly Control"; FTitle.Size = UDim2.new(1,0,0,30); FTitle.TextColor3 = Color3.new(1,1,1)
+	local SpeedDisplay = Instance.new("TextLabel", FMain); SpeedDisplay.Text = "Speed: 50"; SpeedDisplay.Position = UDim2.new(0,0,0,35); SpeedDisplay.Size = UDim2.new(1,0,0,25)
+	
+	local f_btn = Instance.new("TextButton", FMain); f_btn.Text = "Start Fly"; f_btn.Size = UDim2.new(0.9,0,0,35); f_btn.Position = UDim2.new(0.05,0,0,70); f_btn.BackgroundColor3 = Color3.fromRGB(0,100,200)
+	local n_btn = Instance.new("TextButton", FMain); n_btn.Text = "Noclip: OFF"; n_btn.Size = UDim2.new(0.9,0,0,35); n_btn.Position = UDim2.new(0.05,0,0,110); n_btn.BackgroundColor3 = Color3.fromRGB(100,50,0)
 
-local flyGuiInstance, hlGuiInstance = nil, nil
+	local flying = false
+	local noclip = false
+	local speed = 50
+	local bv, bg
 
-local function RunFlyScript()
-	local sg = Instance.new("ScreenGui", player.PlayerGui); sg.ResetOnSpawn = false; flyGuiInstance = sg
-	local mf = Instance.new("Frame", sg); mf.Size = UDim2.new(0, 220, 0, 215); mf.Position = UDim2.new(0.5, 310, 0.5, -107); mf.BackgroundColor3 = Color3.fromRGB(30, 30, 30); Instance.new("UICorner", mf); makeDraggable(mf)
-	local titleF = Instance.new("TextLabel", mf); titleF.Size = UDim2.new(1,0,0,35); titleF.Text = "Fly V2"; titleF.TextColor3 = Color3.new(1,1,1); titleF.BackgroundTransparency = 1; titleF.Font = 3
-	local spdL = Instance.new("TextLabel", mf); spdL.Size = UDim2.new(0,80,0,25); spdL.Position = UDim2.new(0.5,-40,0,40); spdL.Text = "SPD: 50"; spdL.BackgroundColor3 = Color3.fromRGB(45,45,45); spdL.TextColor3 = Color3.new(0,1,0.6); Instance.new("UICorner", spdL)
-	local flying, noclip, spd, bv, bg, mU, mD = false, false, 50, nil, nil, false, false
-	local function cb(t,p,s,c) local b = Instance.new("TextButton", mf); b.Text=t; b.Position=p; b.Size=s; b.BackgroundColor3=c; b.TextColor3=Color3.new(1,1,1); Instance.new("UICorner",b); return b end
-	local pB = cb("+", UDim2.new(0.72,0,0,40), UDim2.new(0,40,0,25), Color3.fromRGB(60,60,60))
-	local mB = cb("-", UDim2.new(0.1,0,0,40), UDim2.new(0,40,0,25), Color3.fromRGB(60,60,60))
-	local fvB = cb("FLY", UDim2.new(0.05,0,0,110), UDim2.new(0,198,0,35), Color3.fromRGB(0,120,255))
-	local ncB = cb("NOCLIP: OFF", UDim2.new(0.05,0,0,150), UDim2.new(0,198,0,30), Color3.fromRGB(150,75,0))
-	local uB = cb("UP", UDim2.new(0.05,0,0,75), UDim2.new(0,95,0,30), Color3.fromRGB(80,80,80))
-	local dB = cb("DOWN", UDim2.new(0.52,0,0,75), UDim2.new(0,95,0,30), Color3.fromRGB(80,80,80))
-	pB.MouseButton1Click:Connect(function() spd += 10; spdL.Text = "SPD: "..spd end)
-	mB.MouseButton1Click:Connect(function() spd = math.max(0, spd-10); spdL.Text = "SPD: "..spd end)
-	uB.MouseButton1Down:Connect(function() mU = true end); uB.MouseButton1Up:Connect(function() mU = false end)
-	dB.MouseButton1Down:Connect(function() mD = true end); dB.MouseButton1Up:Connect(function() mD = false end)
-	ncB.MouseButton1Click:Connect(function() noclip = not noclip; ncB.Text = noclip and "NOCLIP: ON" or "NOCLIP: OFF"; ncB.BackgroundColor3 = noclip and Color3.new(1,0,0) or Color3.fromRGB(150,75,0) end)
-	fvB.MouseButton1Click:Connect(function()
-		flying = not flying; local char = player.Character; local root = char.HumanoidRootPart
-		if flying then fvB.Text = "STOP"; fvB.BackgroundColor3 = Color3.new(0.8,0.2,0.2); char.Humanoid.PlatformStand = true
-			bv = Instance.new("BodyVelocity", root); bv.MaxForce = Vector3.new(1e9,1e9,1e9); bg = Instance.new("BodyGyro", root); bg.MaxTorque = Vector3.new(1e9,1e9,1e9); bg.P = 50000
-		else fvB.Text = "FLY"; fvB.BackgroundColor3 = Color3.fromRGB(0,120,255); if bv then bv:Destroy() end; if bg then bg:Destroy() end; char.Humanoid.PlatformStand = false end
+	f_btn.MouseButton1Click:Connect(function()
+		flying = not flying
+		f_btn.Text = flying and "Stop Fly" or "Start Fly"
+		f_btn.BackgroundColor3 = flying and Color3.new(0.6,0,0) or Color3.fromRGB(0,100,200)
+		local char = player.Character; local root = char and char:FindFirstChild("HumanoidRootPart")
+		if flying and root then
+			char.Humanoid.PlatformStand = true
+			bv = Instance.new("BodyVelocity", root); bv.MaxForce = Vector3.new(1e9,1e9,1e9); bv.Velocity = Vector3.new(0,0,0)
+			bg = Instance.new("BodyGyro", root); bg.MaxTorque = Vector3.new(1e9,1e9,game; bg.P = 50000
+		else
+			if bv then bv:Destroy() end; if bg then bg:Destroy() end
+			if char and char:FindFirstChild("Humanoid") then char.Humanoid.PlatformStand = false end
+		end
 	end)
+
+	n_btn.MouseButton1Click:Connect(function()
+		noclip = not noclip
+		n_btn.Text = noclip and "Noclip: ON" or "Noclip: OFF"
+		n_btn.BackgroundColor3 = noclip and Color3.new(1,0,0) or Color3.fromRGB(100,50,0)
+	end)
+
 	RunService.Stepped:Connect(function()
-		local char = player.Character; if not char then return end
-		if noclip then for _,v in pairs(char:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end
-		if flying and bv and bg then bg.CFrame = workspace.CurrentCamera.CFrame
-			bv.Velocity = (char.Humanoid.MoveDirection * spd) + Vector3.new(0, (mU and spd or 0) + (mD and -spd or 0), 0) end
+		if noclip and player.Character then
+			for _, v in pairs(player.Character:GetDescendants()) do
+				if v:IsA("BasePart") then v.CanCollide = false end
+			end
+		end
+		if flying and bv and bg then
+			bg.CFrame = workspace.CurrentCamera.CFrame
+			bv.Velocity = player.Character.Humanoid.MoveDirection * speed
+		end
 	end)
 end
 
-local function RunHLScript()
-	local sg = Instance.new("ScreenGui", player.PlayerGui); sg.ResetOnSpawn = false; hlGuiInstance = sg
-	local mf = Instance.new("Frame", sg); mf.Size = UDim2.new(0, 260, 0, 280); mf.Position = UDim2.new(0.5, -570, 0.5, -140); mf.BackgroundColor3 = Color3.fromRGB(30,30,30); Instance.new("UICorner", mf); makeDraggable(mf)
-	local uB = Instance.new("TextBox", mf); uBox = uB; uB.Size = UDim2.new(0.9,0,0,40); uB.Position = UDim2.new(0.05,0,0.15,0); uB.PlaceholderText = "Name/All"; uB.BackgroundColor3 = Color3.fromRGB(50,50,50); uB.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", uB)
-	local cB = Instance.new("TextBox", mf); cBox = cB; cB.Size = UDim2.new(0.9,0,0,40); cB.Position = UDim2.new(0.05,0,0.33,0); cB.PlaceholderText = "Color (แดง, เขียว, ฟ้า...)"; cB.BackgroundColor3 = Color3.fromRGB(50,50,50); cB.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", cB)
-	local aB = Instance.new("TextButton", mf)game.Size = UDim2.new(0.9,0,0,45); aB.Position = UDim2.new(0.05,0,0.75,0); aB.Text = "Apply Highlights"; aB.BackgroundColor3 = Color3.fromRGB(0,150,255); aB.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", aB)
-	local cMap = {["แดง"]=Color3.new(1,0,0),["เขียว"]=Color3.new(0,1,0),["ฟ้า"]=Color3.new(0,0.5,1),["เหลือง"]=Color3.new(1,1,0),["ขาว"]=Color3.new(1,1,1)}
-	aB.MouseButton1Click:Connect(function()
-		local t = uB.Text:lower(); local col = cMap[cB.Text] or Color3.new(1,1,1)
-		for _,p in pairs(Players:GetPlayers()) do
-			if t == "all" or p.Name:lower():find(t) or p.DisplayName:lower():find(t) then
-				if p.Character then local h = p.Character:FindFirstChild("CustomHL") or Instance.new("Highlight", p.Character); h.Name = "CustomHL"; h.FillColor = col end
+-----------------------------------------------------------
+-- [ ระบบ Highlight Player ]
+-----------------------------------------------------------
+local hl_ui_instance = nil
+local function StartHighlightSystem()
+	if hl_ui_instance then 
+		hl_ui_instance.Enabled = not hl_ui_instance.Enabled
+		hlOpenBtn.Text = hl_ui_instance.Enabled and "CLOSE" or "OPEN"
+		return 
+	end
+
+	hlOpenBtn.Text = "CLOSE"
+	local HL_Gui = Instance.new("ScreenGui", player.PlayerGui); HL_Gui.ResetOnSpawn = false
+	hl_ui_instance = HL_Gui
+	
+	local HLMain = Instance.new("Frame", HL_Gui); HLMain.Size = UDim2.new(0, 250, 0, 200); HLMain.Position = UDim2.new(0.1, 0, 0.5, 0); HLMain.BackgroundColor3 = Color3.fromRGB(30,30,30); makeDraggable(HLMain)
+	
+	local box = Instance.new("TextBox", HLMain); box.PlaceholderText = "Player Name / All"; box.Size = UDim2.new(0.9,0,0,35); box.Position = UDim2.new(0.05,0,0.2,0)
+	local colorBox = Instance.new("TextBox", HLMain); colorBox.PlaceholderText = "Color (แดง, เขียว, ฟ้า...)"; colorBox.Size = UDim2.new(0.9,0,0,35); colorBox.Position = UDim2.new(0.05,0,0.45,0)
+	local applyBtn = Instance.new("TextButton", HLMain); applyBtn.Text = "Apply Highlight"; applyBtn.Size = UDim2.new(0.9,0,0,40); applyBtn.Position = UDim2.new(0.05,0,0.7,0); applyBtn.BackgroundColor3 = Color3.fromRGB(0,150,0)
+
+	local colorMap = {["แดง"]=Color3.new(1,0,0), ["เขียว"]=Color3.new(0,1,0), ["ฟ้า"]=Color3.new(0,0.5,1), ["เหลือง"]=Color3.new(1,1,0), ["ขาว"]=Color3.new(1,1,1)}
+
+	applyBtn.MouseButton1Click:Connect(function()
+		local target = box.Text:lower()
+		local col = colorMap[colorBox.Text] or Color3.new(1,1,1)
+		for _, p in pairs(game.Players:GetPlayers()) do
+			if target == "all" or p.Name:lower():find(target) then
+				if p.Character then
+					local h = p.Character:FindFirstChild("HL") or Instance.new("Highlight", p.Character)
+					h.Name = "HL"; h.FillColor = col
+				end
 			end
 		end
 	end)
 end
 
-flyOpen.MouseButton1Click:Connect(function()
-	if not flyGuiInstance then RunFlyScript() end
-	flyGuiInstance.Enabled = not flyGuiInstance.Enabled
-	flyOpen.Text = flyGuiInstance.Enabled and "CLOSE" or "OPEN"
-	flyOpen.BackgroundColor3 = flyGuiInstance.Enabled and Color3.new(0.6,0,0) or Color3.fromRGB(0, 170, 127)
-end)
-
-hlOpen.MouseButton1Click:Connect(function()
-	if not hlGuiInstance then RunHLScript() end
-	hlGuiInstance.Enabled = not hlGuiInstance.Enabled
-	hlOpen.Text = hlGuiInstance.Enabled and "CLOSE" or "OPEN"
-	hlOpen.BackgroundColor3 = hlGuiInstance.Enabled and Color3.new(0.6,0,0) or Color3.fromRGB(0, 120, 255)
-end)
-
-closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy(); if flyGuiInstance then flyGuiInstance:Destroy() end; if hlGuiInstance then hlGuiInstance:Destroy() end end)
-minBtn.MouseButton1Click:Connect(function() mainContainer.Visible = not mainContainer.Visible end)
-mainTabBtn.MouseButton1Click:Connect(function() mainFrame.Visible = true; settingFrame.Visible = false end)
-settingTabBtn.MouseButton1Click:Connect(function() mainFrame.Visible = false; settingFrame.Visible = true end)
+-- เชื่อมโยงปุ่มใน Main
+flyOpenBtn.MouseButton1Click:Connect(function() playClick(); StartFlySystem() end)
+hlOpenBtn.MouseButton1Click:Connect(function() playClick(); StartHighlightSystem() end)
